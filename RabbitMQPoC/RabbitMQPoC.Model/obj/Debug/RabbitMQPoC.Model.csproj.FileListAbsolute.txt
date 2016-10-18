@@ -1,0 +1,5 @@
+D:\Apps\RabbitMQPoC\RabbitMQPoC\RabbitMQPoC.Model\bin\Debug\RabbitMQPoC.Model.dll
+D:\Apps\RabbitMQPoC\RabbitMQPoC\RabbitMQPoC.Model\bin\Debug\RabbitMQPoC.Model.pdb
+D:\Apps\RabbitMQPoC\RabbitMQPoC\RabbitMQPoC.Model\obj\Debug\RabbitMQPoC.Model.csprojResolveAssemblyReference.cache
+D:\Apps\RabbitMQPoC\RabbitMQPoC\RabbitMQPoC.Model\obj\Debug\RabbitMQPoC.Model.dll
+D:\Apps\RabbitMQPoC\RabbitMQPoC\RabbitMQPoC.Model\obj\Debug\RabbitMQPoC.Model.pdb

@@ -288,6 +288,16 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RabbitMQPoC.Model\RabbitMQPoC.Model.csproj">
+      <Project>{0D7EA147-A582-4934-A7B8-2B92D2ABC0B4}</Project>
+      <Name>RabbitMQPoC.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RabbitMQPoc.Service\RabbitMQPoc.Service.csproj">
+      <Project>{593E8F83-DF41-43CD-8BF2-45EB8BA8CED9}</Project>
+      <Name>RabbitMQPoc.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
