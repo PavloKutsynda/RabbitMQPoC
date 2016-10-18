@@ -32,7 +32,7 @@ namespace RabbitMQConsumer.Controllers
 
             while (true)
             {
-                BasicDeliverEventArgs deliveryArguments = consumer.Queue.Dequeue() as BasicDeliverEventArgs;
+                BasicDeliverEventArgs deliveryArguments = consumer.Queue.Where(x=>x == ).Dequeue() as BasicDeliverEventArgs;
                 String jsonified = Encoding.UTF8.GetString(deliveryArguments.Body);
 
                 RabbitMqMessage message = JsonConvert.DeserializeObject<RabbitMqMessage>(jsonified);

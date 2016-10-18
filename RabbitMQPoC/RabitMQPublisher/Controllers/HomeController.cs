@@ -15,12 +15,7 @@ namespace RabitMQPublisher.Controllers
     {
         public ActionResult Index()
         {
-            RabbitMqService rabbitMqService = new RabbitMqService();
-            IConnection connection = rabbitMqService.GetRabbitMqConnection();
-            IModel model = connection.CreateModel();
-            
-            SetupSerialisationMessageQueue(model);
-            PublishMessage(model);
+          
 
             return View();
         }
