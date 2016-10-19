@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-D:\Apps\RabbitMQPoC\RabbitMQPoC\WpfRabbitMqPublisher\obj\Debug\
+D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\WpfRabbitMqPublisher\obj\Debug\
 WpfRabbitMqPublisher
 none
 false
 DEBUG;TRACE
-D:\Apps\RabbitMQPoC\RabbitMQPoC\WpfRabbitMqPublisher\App.xaml
+D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\WpfRabbitMqPublisher\App.xaml
 11151548125
 
 9636536524
-17500569123
+17-1223619416
 MainWindow.xaml;
 
 True

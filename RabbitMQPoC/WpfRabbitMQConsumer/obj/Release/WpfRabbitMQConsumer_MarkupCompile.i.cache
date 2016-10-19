@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-D:\Apps\RabbitMQPoC\RabbitMQPoC\WpfRabbitMQConsumer\obj\Release\
+D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\WpfRabbitMQConsumer\obj\Release\
 WpfRabbitMQConsumer
 none
 false
 TRACE
-D:\Apps\RabbitMQPoC\RabbitMQPoC\WpfRabbitMQConsumer\App.xaml
+D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\WpfRabbitMQConsumer\App.xaml
 11151548125
 
 91527019039
-17-504157094
+17-21536796
 MainWindow.xaml;
 
 True

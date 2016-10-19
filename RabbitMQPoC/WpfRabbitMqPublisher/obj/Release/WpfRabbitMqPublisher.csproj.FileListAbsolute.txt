@@ -19,3 +19,6 @@ D:\Apps\RabbitMQPoC\RabbitMQPoC\WpfRabbitMqPublisher\obj\Release\WpfRabbitMqPubl
 D:\Apps\RabbitMQPoC\RabbitMQPoC\WpfRabbitMqPublisher\obj\Release\WpfRabbitMqPublisher.csproj.GenerateResource.Cache
 D:\Apps\RabbitMQPoC\RabbitMQPoC\WpfRabbitMqPublisher\obj\Release\WpfRabbitMqPublisher.exe
 D:\Apps\RabbitMQPoC\RabbitMQPoC\WpfRabbitMqPublisher\obj\Release\WpfRabbitMqPublisher.pdb
+D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\WpfRabbitMqPublisher\bin\Release\WpfRabbitMqPublisher.exe.config
+D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\WpfRabbitMqPublisher\obj\Release\WpfRabbitMqPublisher.exe
+D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\WpfRabbitMqPublisher\obj\Release\WpfRabbitMqPublisher.pdb
