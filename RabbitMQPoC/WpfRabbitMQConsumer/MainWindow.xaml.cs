@@ -81,34 +81,63 @@ namespace WpfRabbitMQConsumer
         public MainWindow()
         {
             InitializeComponent();
-            SetUpRabbitMqConsumer();
+            SetUpRabbitMqFirstMessageConsumer();
+            SetUpRabbitMqSecondMessageConsumer();
         }
 
-        private void SetUpRabbitMqConsumer()
+        private void SetUpRabbitMqFirstMessageConsumer()
         {
             RabbitMqService rabbitMqService = new RabbitMqService();
             IConnection connection = rabbitMqService.GetRabbitMqConnection();
             IModel channel = connection.CreateModel();
 
             EventingBasicConsumer eventingBasicConsumer = new EventingBasicConsumer(channel);
-            eventingBasicConsumer.Received += EventingBasicConsumerOnReceived(channel);
+            eventingBasicConsumer.Received += FirstMessageConsumerOnReceived(channel);
             channel.BasicConsume(RabbitMqService.QueueName, false, eventingBasicConsumer);
         }
 
-        private EventHandler<BasicDeliverEventArgs> EventingBasicConsumerOnReceived(IModel channel)
+        private EventHandler<BasicDeliverEventArgs> FirstMessageConsumerOnReceived(IModel channel)
         {
             return (sender, basicDeliveryEventArgs) =>
             {
-                var message = string.Format("{0}{1} {2}", Environment.NewLine, DateTime.Now.ToString("h:mm:ss"), Encoding.UTF8.GetString(basicDeliveryEventArgs.Body));
+                var message = string.Format("{0} {1}", DateTime.Now.ToString("h:mm:ss"), Encoding.UTF8.GetString(basicDeliveryEventArgs.Body));
 
                 Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate
                 {
-                    this.TextBlock.Text += message;
+                    this.TextBlock.Text += string.Format("{0}  FirstMessageConsumer  - {1}", Environment.NewLine, message);
                 }));
 
                 if (basicDeliveryEventArgs.BasicProperties.ContentType == "FirstMessage")
                 {
+                    channel.BasicAck(basicDeliveryEventArgs.DeliveryTag, false);
+                }
+            };
+        }
 
+        private void SetUpRabbitMqSecondMessageConsumer()
+        {
+            RabbitMqService rabbitMqService = new RabbitMqService();
+            IConnection connection = rabbitMqService.GetRabbitMqConnection();
+            IModel channel = connection.CreateModel();
+
+            EventingBasicConsumer eventingBasicConsumer = new EventingBasicConsumer(channel);
+            eventingBasicConsumer.Received += SecondMessageConsumerOnReceived(channel);
+            channel.BasicConsume(RabbitMqService.QueueName, false, eventingBasicConsumer);
+        }
+
+        private EventHandler<BasicDeliverEventArgs> SecondMessageConsumerOnReceived(IModel channel)
+        {
+            return (sender, basicDeliveryEventArgs) =>
+            {
+                var message = string.Format("{0} {1}", DateTime.Now.ToString("h:mm:ss"), Encoding.UTF8.GetString(basicDeliveryEventArgs.Body));
+
+                Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate
+                {
+                    this.TextBlock.Text += string.Format("{0} SecondMessageConsumer - {1}", Environment.NewLine, message);
+                }));
+
+                if (basicDeliveryEventArgs.BasicProperties.ContentType == "SecondMessage")
+                {
                     channel.BasicAck(basicDeliveryEventArgs.DeliveryTag, false);
                 }
             };
