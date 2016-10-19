@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,12 +25,15 @@ namespace WpfRabbitMqPublisher
     /// </summary>
     public partial class MainWindow : Window
     {
+
         public MainWindow()
         {
             InitializeComponent();
         }
 
         #region Request 
+
+        private static int RequestCounter;
 
         private void Publish_Request_Message(object sender, RoutedEventArgs e)
         {
@@ -50,6 +54,7 @@ namespace WpfRabbitMqPublisher
         {
             var requestMessage = new RequestMessage()
             {
+                Id = ++RequestCounter,
                 Text = this.RequestText.Text
             };
 

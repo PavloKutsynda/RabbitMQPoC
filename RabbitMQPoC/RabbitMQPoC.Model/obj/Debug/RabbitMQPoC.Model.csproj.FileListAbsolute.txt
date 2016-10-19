@@ -6,3 +6,5 @@ D:\Apps\RabbitMQPoC\RabbitMQPoC\RabbitMQPoC.Model\obj\Debug\RabbitMQPoC.Model.pd
 D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\RabbitMQPoC.Model\obj\Debug\RabbitMQPoC.Model.csprojResolveAssemblyReference.cache
 D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\RabbitMQPoC.Model\obj\Debug\RabbitMQPoC.Model.dll
 D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\RabbitMQPoC.Model\obj\Debug\RabbitMQPoC.Model.pdb
+D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\RabbitMQPoC.Model\bin\Debug\RabbitMQPoC.Model.dll
+D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\RabbitMQPoC.Model\bin\Debug\RabbitMQPoC.Model.pdb
