@@ -1,0 +1,4 @@
+D:\Apps\RabbitMQPoC\RabbitMQPoC\RabbitMQPoC.Model\bin\Release\RabbitMQPoC.Model.dll
+D:\Apps\RabbitMQPoC\RabbitMQPoC\RabbitMQPoC.Model\bin\Release\RabbitMQPoC.Model.pdb
+D:\Apps\RabbitMQPoC\RabbitMQPoC\RabbitMQPoC.Model\obj\Release\RabbitMQPoC.Model.dll
+D:\Apps\RabbitMQPoC\RabbitMQPoC\RabbitMQPoC.Model\obj\Release\RabbitMQPoC.Model.pdb

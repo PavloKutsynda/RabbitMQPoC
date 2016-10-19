@@ -72,7 +72,12 @@ namespace WpfRabbitMqPublisher
             };
 
             IBasicProperties basicProperties = model.CreateBasicProperties();
-            basicProperties.SetPersistent(true);
+            basicProperties.SetPersistent(false);
+            var messageHeaders = new Dictionary<string, object>();
+            messageHeaders.Add("type", "FirstMessage");
+            basicProperties.Headers = messageHeaders;
+            basicProperties.ContentType = "FirstMessage";
+
             String jsonified = JsonConvert.SerializeObject(message);
             byte[] messageBuffer = Encoding.UTF8.GetBytes(jsonified);
             model.BasicPublish("", RabbitMqService.QueueName, basicProperties, messageBuffer);
@@ -86,7 +91,13 @@ namespace WpfRabbitMqPublisher
             };
 
             IBasicProperties basicProperties = model.CreateBasicProperties();
-            basicProperties.SetPersistent(true);
+            basicProperties.SetPersistent(false);
+            var messageHeaders = new Dictionary<string, object>();
+            messageHeaders.Add("type", "SecondMessage");
+            basicProperties.Headers = messageHeaders;
+            basicProperties.ContentType = "SecondMessage";
+
+
             String jsonified = JsonConvert.SerializeObject(message);
             byte[] messageBuffer = Encoding.UTF8.GetBytes(jsonified);
             model.BasicPublish("", RabbitMqService.QueueName, basicProperties, messageBuffer);
