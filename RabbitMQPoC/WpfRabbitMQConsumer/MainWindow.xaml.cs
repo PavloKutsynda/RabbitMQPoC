@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -80,37 +81,37 @@ namespace WpfRabbitMQConsumer
         public MainWindow()
         {
             InitializeComponent();
+            SetUpRabbitMqConsumer();
+        }
 
+        private void SetUpRabbitMqConsumer()
+        {
             RabbitMqService rabbitMqService = new RabbitMqService();
             IConnection connection = rabbitMqService.GetRabbitMqConnection();
             IModel channel = connection.CreateModel();
 
-            channel.BasicQos(0, 1, false);
             EventingBasicConsumer eventingBasicConsumer = new EventingBasicConsumer(channel);
+            eventingBasicConsumer.Received += EventingBasicConsumerOnReceived(channel);
+            channel.BasicConsume(RabbitMqService.QueueName, false, eventingBasicConsumer);
+        }
 
-            eventingBasicConsumer.Received += (sender, basicDeliveryEventArgs) =>
+        private EventHandler<BasicDeliverEventArgs> EventingBasicConsumerOnReceived(IModel channel)
+        {
+            return (sender, basicDeliveryEventArgs) =>
             {
-                IBasicProperties basicProperties = basicDeliveryEventArgs.BasicProperties;
+                var message = string.Format("{0}{1} {2}", Environment.NewLine, DateTime.Now.ToString("h:mm:ss"), Encoding.UTF8.GetString(basicDeliveryEventArgs.Body));
 
-                Debug.WriteLine(string.Concat("Message received from the exchange ", basicDeliveryEventArgs.Exchange));
-                Debug.WriteLine(string.Concat("Message: ", Encoding.UTF8.GetString(basicDeliveryEventArgs.Body)));
-                StringBuilder headersBuilder = new StringBuilder();
-                headersBuilder.Append("Headers: ").Append(Environment.NewLine);
-                foreach (var kvp in basicProperties.Headers)
+                Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate
                 {
-                    headersBuilder.Append(kvp.Key).Append(": ").Append(Encoding.UTF8.GetString(kvp.Value as byte[])).Append(Environment.NewLine);
+                    this.TextBlock.Text += message;
+                }));
+
+                if (basicDeliveryEventArgs.BasicProperties.ContentType == "FirstMessage")
+                {
+
+                    channel.BasicAck(basicDeliveryEventArgs.DeliveryTag, false);
                 }
-                Debug.WriteLine(headersBuilder.ToString());
-                channel.BasicAck(basicDeliveryEventArgs.DeliveryTag, false);
-
-
-                this.TextBlock.Text += Environment.NewLine;
-                this.TextBlock.Text += DateTime.Now.ToString("G");
-                this.TextBlock.Text += " ";
-                this.TextBlock.Text += headersBuilder.ToString();
             };
-
-            channel.BasicConsume("company.queue.headers", false, eventingBasicConsumer);
         }
     }
 }
