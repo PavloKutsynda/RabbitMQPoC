@@ -29,79 +29,45 @@ namespace WpfRabbitMqPublisher
             InitializeComponent();
         }
 
-        private void Publish_FirstMessage(object sender, RoutedEventArgs e)
+        #region Request 
+
+        private void Publish_Request_Message(object sender, RoutedEventArgs e)
         {
             RabbitMqService rabbitMqService = new RabbitMqService();
             IConnection connection = rabbitMqService.GetRabbitMqConnection();
             IModel model = connection.CreateModel();
 
-            SetupSerialisationMessageQueue(model);
-            PublishFirstMessage(model);
+            SetupRequestQueue(model);
+            PublishRequestMessage(model);
         }
 
-        private void Publish_SecondMessage(object sender, RoutedEventArgs e)
+        private void SetupRequestQueue(IModel model)
         {
-            RabbitMqService rabbitMqService = new RabbitMqService();
-            IConnection connection = rabbitMqService.GetRabbitMqConnection();
-            IModel model = connection.CreateModel();
-
-            SetupSerialisationMessageQueue(model);
-            PublishSecondMessage(model);
+            model.QueueDeclare(RabbitMqService.RequestQueueName, true, false, false, null);
         }
 
-
-        #region Private methods
-
-        private void SetupInitialTopicQueue(IModel model)
+        private void PublishRequestMessage(IModel model)
         {
-            model.QueueDeclare("queueFromVisualStudio", true, false, false, null);
-            model.ExchangeDeclare("exchangeFromVisualStudio", ExchangeType.Topic);
-            model.QueueBind("queueFromVisualStudio", "exchangeFromVisualStudio", "superstars");
-        }
-
-        private void SetupSerialisationMessageQueue(IModel model)
-        {
-            model.QueueDeclare(RabbitMqService.QueueName, true, false, false, null);
-        }
-
-        private void PublishFirstMessage(IModel model)
-        {
-            var message = new RabbitMqMessage()
+            var requestMessage = new RequestMessage()
             {
-                Text = "First Message"
+                Text = this.RequestText.Text
             };
 
             IBasicProperties basicProperties = model.CreateBasicProperties();
             basicProperties.SetPersistent(false);
-            var messageHeaders = new Dictionary<string, object>();
-            messageHeaders.Add("type", "FirstMessage");
-            basicProperties.Headers = messageHeaders;
-            basicProperties.ContentType = "FirstMessage";
 
-            String jsonified = JsonConvert.SerializeObject(message);
-            byte[] messageBuffer = Encoding.UTF8.GetBytes(jsonified);
-            model.BasicPublish("", RabbitMqService.QueueName, basicProperties, messageBuffer);
-        }
-
-        private void PublishSecondMessage(IModel model)
-        {
-            var message = new RabbitMqMessage()
+            var messageHeaders = new Dictionary<string, object>
             {
-                Text = "Second Message"
+                {"type", "requestMessage"}
             };
-
-            IBasicProperties basicProperties = model.CreateBasicProperties();
-            basicProperties.SetPersistent(false);
-            var messageHeaders = new Dictionary<string, object>();
-            messageHeaders.Add("type", "SecondMessage");
             basicProperties.Headers = messageHeaders;
-            basicProperties.ContentType = "SecondMessage";
+            basicProperties.ContentType = "requestMessage";
 
-
-            String jsonified = JsonConvert.SerializeObject(message);
+            String jsonified = JsonConvert.SerializeObject(requestMessage);
             byte[] messageBuffer = Encoding.UTF8.GetBytes(jsonified);
-            model.BasicPublish("", RabbitMqService.QueueName, basicProperties, messageBuffer);
+            model.BasicPublish("", RabbitMqService.RequestQueueName, basicProperties, messageBuffer);
         }
+
         #endregion
     }
 }

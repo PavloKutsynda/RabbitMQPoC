@@ -11,8 +11,14 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Button HorizontalAlignment="Center" VerticalAlignment="Center" Click="Publish_FirstMessage" >Publish First Message</Button>
-        <Button Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Publish_SecondMessage" >Publish Second Message</Button>
+        <StackPanel>
+            <Label HorizontalAlignment="Center">Request message</Label>
+            <TextBox Name="RequestText"></TextBox>
+            <Button HorizontalAlignment="Center" VerticalAlignment="Center" Click="Publish_Request_Message" >Publish request message</Button>
+        </StackPanel>
+        <Grid Grid.Column="1" >
+            <RichTextBox Name="ResponseTextBox"></RichTextBox>
+        </Grid>
     </Grid>
 </Window>
 
