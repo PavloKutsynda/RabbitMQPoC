@@ -42,7 +42,10 @@ namespace WpfRabbitMQConsumer
             RabbitMqService rabbitMqService = new RabbitMqService();
             IConnection connection = rabbitMqService.GetRabbitMqConnection();
             IModel channel = connection.CreateModel();
+
+            channel.ExchangeDeclare(RabbitMqService.ExchangeName, ExchangeType.Topic);
             channel.QueueDeclare(RabbitMqService.RequestQueueName, true, false, false, null);
+            channel.QueueBind(RabbitMqService.RequestQueueName, RabbitMqService.ExchangeName, "request");
 
             EventingBasicConsumer eventingBasicConsumer = new EventingBasicConsumer(channel);
             eventingBasicConsumer.Received += RequestConsumerOnReceived(channel);
@@ -74,10 +77,10 @@ namespace WpfRabbitMQConsumer
         {
             RabbitMqService rabbitMqService = new RabbitMqService();
             IConnection connection = rabbitMqService.GetRabbitMqConnection();
-            IModel model = connection.CreateModel();
-            model.QueueDeclare(RabbitMqService.ResponseQueueName, true, false, false, null);
+            IModel channel = connection.CreateModel();
 
-            IBasicProperties basicProperties = model.CreateBasicProperties();
+            PublicationAddress address = new PublicationAddress(ExchangeType.Topic, RabbitMqService.ExchangeName, "response");
+            IBasicProperties basicProperties = channel.CreateBasicProperties();
             basicProperties.SetPersistent(false);
 
             byte[] messageBuffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new ResponseMessage
@@ -85,8 +88,11 @@ namespace WpfRabbitMQConsumer
                 Id = requestMessage.Id,
                 Handled = true
             }));
-
-            model.BasicPublish("", RabbitMqService.ResponseQueueName, basicProperties, messageBuffer);
+            
+            channel.ExchangeDeclare(RabbitMqService.ExchangeName, ExchangeType.Topic);
+            channel.QueueDeclare(RabbitMqService.ResponseQueueName, true, false, false, null);
+            channel.QueueBind(RabbitMqService.ResponseQueueName, RabbitMqService.ExchangeName, "response");
+            channel.BasicPublish(address, basicProperties, messageBuffer);
         }
 
         #endregion

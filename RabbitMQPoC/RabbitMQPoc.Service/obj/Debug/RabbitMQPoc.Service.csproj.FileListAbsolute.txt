@@ -9,3 +9,4 @@ D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\RabbitMQPoc.Service\bin\Debug\RabbitMQPoc.Se
 D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\RabbitMQPoc.Service\bin\Debug\RabbitMQ.Client.dll
 D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\RabbitMQPoc.Service\obj\Debug\RabbitMQPoc.Service.dll
 D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\RabbitMQPoc.Service\obj\Debug\RabbitMQPoc.Service.pdb
+D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\RabbitMQPoc.Service\obj\Debug\RabbitMQPoc.Service.csprojResolveAssemblyReference.cache
