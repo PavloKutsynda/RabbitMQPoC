@@ -66,6 +66,10 @@ namespace WpfRabbitMQConsumer
             };
         }
 
+        #endregion
+
+        #region Response
+        
         private void PublishResponseMessage(RequestMessage requestMessage)
         {
             RabbitMqService rabbitMqService = new RabbitMqService();
@@ -78,7 +82,7 @@ namespace WpfRabbitMQConsumer
 
             byte[] messageBuffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new ResponseMessage
             {
-                 Id = requestMessage.Id,
+                Id = requestMessage.Id,
                 Handled = true
             }));
 
