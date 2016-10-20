@@ -44,9 +44,6 @@ namespace WpfRabbitMqPublisher
             RabbitMqService rabbitMqService = new RabbitMqService();
             IConnection connection = rabbitMqService.GetRabbitMqConnection();
             IModel model = connection.CreateModel();
-            model.ExchangeDeclare(RabbitMqService.ExchangeName, ExchangeType.Topic);
-            model.QueueDeclare(RabbitMqService.RequestQueueName, true, false, false, null);
-            model.QueueBind(RabbitMqService.RequestQueueName, RabbitMqService.ExchangeName, "request");
 
             PublishRequestMessage(model);
         }
@@ -86,10 +83,6 @@ namespace WpfRabbitMqPublisher
             RabbitMqService rabbitMqService = new RabbitMqService();
             IConnection connection = rabbitMqService.GetRabbitMqConnection();
             IModel channel = connection.CreateModel();
-
-            channel.ExchangeDeclare(RabbitMqService.ExchangeName, ExchangeType.Topic);
-            channel.QueueDeclare(RabbitMqService.ResponseQueueName, true, false, false, null);
-            channel.QueueBind(RabbitMqService.ResponseQueueName, RabbitMqService.ExchangeName, "response");
 
             EventingBasicConsumer eventingBasicConsumer = new EventingBasicConsumer(channel);
             eventingBasicConsumer.Received += ResponseConsumerOnReceived(channel);

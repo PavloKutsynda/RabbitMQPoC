@@ -43,10 +43,6 @@ namespace WpfRabbitMQConsumer
             IConnection connection = rabbitMqService.GetRabbitMqConnection();
             IModel channel = connection.CreateModel();
 
-            channel.ExchangeDeclare(RabbitMqService.ExchangeName, ExchangeType.Topic);
-            channel.QueueDeclare(RabbitMqService.RequestQueueName, true, false, false, null);
-            channel.QueueBind(RabbitMqService.RequestQueueName, RabbitMqService.ExchangeName, "request");
-
             EventingBasicConsumer eventingBasicConsumer = new EventingBasicConsumer(channel);
             eventingBasicConsumer.Received += RequestConsumerOnReceived(channel);
             channel.BasicConsume(RabbitMqService.RequestQueueName, false, eventingBasicConsumer);
@@ -89,9 +85,6 @@ namespace WpfRabbitMQConsumer
                 Handled = true
             }));
             
-            channel.ExchangeDeclare(RabbitMqService.ExchangeName, ExchangeType.Topic);
-            channel.QueueDeclare(RabbitMqService.ResponseQueueName, true, false, false, null);
-            channel.QueueBind(RabbitMqService.ResponseQueueName, RabbitMqService.ExchangeName, "response");
             channel.BasicPublish(address, basicProperties, messageBuffer);
         }
 
