@@ -8,6 +8,8 @@ namespace RabbitMQPoC.Model
 {
     public class ResponseMessage
     {
-        public bool Status { get; set; }
+        public int Id { get; set; }
+
+        public bool Handled { get; set; }
     }
 }

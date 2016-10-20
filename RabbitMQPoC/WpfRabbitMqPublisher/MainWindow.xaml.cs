@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,8 +14,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using RabbitMQPoc.Service;
 using RabbitMQPoC.Model;
 
@@ -29,6 +32,7 @@ namespace WpfRabbitMqPublisher
         public MainWindow()
         {
             InitializeComponent();
+            SetUpResponseConsumer();
         }
 
         #region Request 
@@ -40,15 +44,11 @@ namespace WpfRabbitMqPublisher
             RabbitMqService rabbitMqService = new RabbitMqService();
             IConnection connection = rabbitMqService.GetRabbitMqConnection();
             IModel model = connection.CreateModel();
+            model.QueueDeclare(RabbitMqService.RequestQueueName, true, false, false, null);
 
-            SetupRequestQueue(model);
             PublishRequestMessage(model);
         }
-
-        private void SetupRequestQueue(IModel model)
-        {
-            model.QueueDeclare(RabbitMqService.RequestQueueName, true, false, false, null);
-        }
+        
 
         private void PublishRequestMessage(IModel model)
         {
@@ -71,6 +71,37 @@ namespace WpfRabbitMqPublisher
             String jsonified = JsonConvert.SerializeObject(requestMessage);
             byte[] messageBuffer = Encoding.UTF8.GetBytes(jsonified);
             model.BasicPublish("", RabbitMqService.RequestQueueName, basicProperties, messageBuffer);
+        }
+
+        #endregion
+
+        #region Response
+
+        private void SetUpResponseConsumer()
+        {
+            RabbitMqService rabbitMqService = new RabbitMqService();
+            IConnection connection = rabbitMqService.GetRabbitMqConnection();
+            IModel channel = connection.CreateModel();
+            channel.QueueDeclare(RabbitMqService.ResponseQueueName, true, false, false, null);
+
+            EventingBasicConsumer eventingBasicConsumer = new EventingBasicConsumer(channel);
+            eventingBasicConsumer.Received += ResponseConsumerOnReceived(channel);
+            channel.BasicConsume(RabbitMqService.ResponseQueueName, false, eventingBasicConsumer);
+        }
+
+        private EventHandler<BasicDeliverEventArgs> ResponseConsumerOnReceived(IModel channel)
+        {
+            return (sender, basicDeliveryEventArgs) =>
+            {
+                var message = string.Format("{0} {1}", DateTime.Now.ToString("h:mm:ss"), Encoding.UTF8.GetString(basicDeliveryEventArgs.Body));
+
+                Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new ThreadStart(delegate
+                {
+                    this.ResponseTextBox.Text += string.Format("{0}Response - {1}", Environment.NewLine, message);
+                }));
+
+                channel.BasicAck(basicDeliveryEventArgs.DeliveryTag, false);
+            };
         }
 
         #endregion

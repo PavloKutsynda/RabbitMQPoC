@@ -7,6 +7,5 @@ D:\Apps\RabbitMQPoC\RabbitMQPoC\RabbitMQPoc.Service\obj\Debug\RabbitMQPoc.Servic
 D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\RabbitMQPoc.Service\bin\Debug\RabbitMQPoc.Service.dll
 D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\RabbitMQPoc.Service\bin\Debug\RabbitMQPoc.Service.pdb
 D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\RabbitMQPoc.Service\bin\Debug\RabbitMQ.Client.dll
-D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\RabbitMQPoc.Service\obj\Debug\RabbitMQPoc.Service.csprojResolveAssemblyReference.cache
 D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\RabbitMQPoc.Service\obj\Debug\RabbitMQPoc.Service.dll
 D:\RabbitMq\RabbitMQPoC\RabbitMQPoC\RabbitMQPoc.Service\obj\Debug\RabbitMQPoc.Service.pdb

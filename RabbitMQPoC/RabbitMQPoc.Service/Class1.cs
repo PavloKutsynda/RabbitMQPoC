@@ -13,7 +13,7 @@ namespace RabbitMQPoc.Service
         private string _userName = "guest";
         private string _password = "guest";
 
-        public static string ResponseQueueName = "ResponceQueue";
+        public static string ResponseQueueName = "ResponseQueue";
         public static string RequestQueueName = "RequestQueue";
 
         public IConnection GetRabbitMqConnection()

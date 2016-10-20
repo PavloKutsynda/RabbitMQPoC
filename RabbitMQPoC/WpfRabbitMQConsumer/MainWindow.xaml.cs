@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.RightsManagement;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,8 +29,6 @@ namespace WpfRabbitMQConsumer
     /// </summary>
     public partial class MainWindow : Window
     {
-        DispatcherTimer dt = new DispatcherTimer();
-
         public MainWindow()
         {
             InitializeComponent();
@@ -43,6 +42,7 @@ namespace WpfRabbitMQConsumer
             RabbitMqService rabbitMqService = new RabbitMqService();
             IConnection connection = rabbitMqService.GetRabbitMqConnection();
             IModel channel = connection.CreateModel();
+            channel.QueueDeclare(RabbitMqService.RequestQueueName, true, false, false, null);
 
             EventingBasicConsumer eventingBasicConsumer = new EventingBasicConsumer(channel);
             eventingBasicConsumer.Received += RequestConsumerOnReceived(channel);
@@ -59,14 +59,32 @@ namespace WpfRabbitMQConsumer
                 {
                     this.RequestTextBox.Text += string.Format("{0}Request - {1}", Environment.NewLine, message);
                 }));
+                channel.BasicAck(basicDeliveryEventArgs.DeliveryTag, false);
 
-                if (basicDeliveryEventArgs.BasicProperties.ContentType == "requestMessage")
-                {
-                    channel.BasicAck(basicDeliveryEventArgs.DeliveryTag, false);
-                }
+                var requestMessage = JsonConvert.DeserializeObject<RequestMessage>(Encoding.UTF8.GetString(basicDeliveryEventArgs.Body));
+                PublishResponseMessage(requestMessage);
             };
         }
-        
+
+        private void PublishResponseMessage(RequestMessage requestMessage)
+        {
+            RabbitMqService rabbitMqService = new RabbitMqService();
+            IConnection connection = rabbitMqService.GetRabbitMqConnection();
+            IModel model = connection.CreateModel();
+            model.QueueDeclare(RabbitMqService.ResponseQueueName, true, false, false, null);
+
+            IBasicProperties basicProperties = model.CreateBasicProperties();
+            basicProperties.SetPersistent(false);
+
+            byte[] messageBuffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new ResponseMessage
+            {
+                 Id = requestMessage.Id,
+                Handled = true
+            }));
+
+            model.BasicPublish("", RabbitMqService.ResponseQueueName, basicProperties, messageBuffer);
+        }
+
         #endregion
     }
 }

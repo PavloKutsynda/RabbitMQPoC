@@ -17,7 +17,7 @@
             <Button HorizontalAlignment="Center" VerticalAlignment="Center" Click="Publish_Request_Message" >Publish request message</Button>
         </StackPanel>
         <Grid Grid.Column="1" >
-            <RichTextBox Name="ResponseTextBox"></RichTextBox>
+            <TextBox Name="ResponseTextBox"></TextBox>
         </Grid>
     </Grid>
 </Window>
