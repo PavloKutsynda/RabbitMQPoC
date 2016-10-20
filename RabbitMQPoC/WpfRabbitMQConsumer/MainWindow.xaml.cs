@@ -29,9 +29,13 @@ namespace WpfRabbitMQConsumer
     /// </summary>
     public partial class MainWindow : Window
     {
+        RabbitMqService rabbitMqService = new RabbitMqService();
+        private IConnection connection;
+
         public MainWindow()
         {
             InitializeComponent();
+            connection = rabbitMqService.GetRabbitMqConnection();
             SetUpRequestConsumer();
         }
 
@@ -39,10 +43,7 @@ namespace WpfRabbitMQConsumer
 
         private void SetUpRequestConsumer()
         {
-            RabbitMqService rabbitMqService = new RabbitMqService();
-            IConnection connection = rabbitMqService.GetRabbitMqConnection();
             IModel channel = connection.CreateModel();
-
             EventingBasicConsumer eventingBasicConsumer = new EventingBasicConsumer(channel);
             eventingBasicConsumer.Received += RequestConsumerOnReceived(channel);
             channel.BasicConsume(RabbitMqService.RequestQueueName, false, eventingBasicConsumer);
@@ -71,11 +72,10 @@ namespace WpfRabbitMQConsumer
         
         private void PublishResponseMessage(RequestMessage requestMessage)
         {
-            RabbitMqService rabbitMqService = new RabbitMqService();
-            IConnection connection = rabbitMqService.GetRabbitMqConnection();
             IModel channel = connection.CreateModel();
 
             PublicationAddress address = new PublicationAddress(ExchangeType.Topic, RabbitMqService.ExchangeName, "response");
+
             IBasicProperties basicProperties = channel.CreateBasicProperties();
             basicProperties.SetPersistent(false);
 

@@ -29,9 +29,13 @@ namespace WpfRabbitMqPublisher
     public partial class MainWindow : Window
     {
 
+        private RabbitMqService rabbitMqService = new RabbitMqService();
+        private IConnection connection;
+
         public MainWindow()
         {
             InitializeComponent();
+            connection = rabbitMqService.GetRabbitMqConnection();
             SetUpResponseConsumer();
         }
 
@@ -41,36 +45,19 @@ namespace WpfRabbitMqPublisher
 
         private void Publish_Request_Message(object sender, RoutedEventArgs e)
         {
-            RabbitMqService rabbitMqService = new RabbitMqService();
-            IConnection connection = rabbitMqService.GetRabbitMqConnection();
             IModel model = connection.CreateModel();
-
-            PublishRequestMessage(model);
-        }
-        
-
-        private void PublishRequestMessage(IModel model)
-        {
-            var requestMessage = new RequestMessage()
-            {
-                Id = ++RequestCounter,
-                Text = this.RequestText.Text
-            };
 
             PublicationAddress address = new PublicationAddress(ExchangeType.Topic, RabbitMqService.ExchangeName, "request");
 
             IBasicProperties basicProperties = model.CreateBasicProperties();
             basicProperties.SetPersistent(false);
 
-            var messageHeaders = new Dictionary<string, object>
+            byte[] messageBuffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new RequestMessage
             {
-                {"type", "requestMessage"}
-            };
-            basicProperties.Headers = messageHeaders;
-            basicProperties.ContentType = "requestMessage";
+                Id = ++RequestCounter,
+                Text = this.RequestText.Text
+            }));
 
-            String jsonified = JsonConvert.SerializeObject(requestMessage);
-            byte[] messageBuffer = Encoding.UTF8.GetBytes(jsonified);
             model.BasicPublish(address, basicProperties, messageBuffer);
         }
 
@@ -80,10 +67,7 @@ namespace WpfRabbitMqPublisher
 
         private void SetUpResponseConsumer()
         {
-            RabbitMqService rabbitMqService = new RabbitMqService();
-            IConnection connection = rabbitMqService.GetRabbitMqConnection();
             IModel channel = connection.CreateModel();
-
             EventingBasicConsumer eventingBasicConsumer = new EventingBasicConsumer(channel);
             eventingBasicConsumer.Received += ResponseConsumerOnReceived(channel);
             channel.BasicConsume(RabbitMqService.ResponseQueueName, false, eventingBasicConsumer);
