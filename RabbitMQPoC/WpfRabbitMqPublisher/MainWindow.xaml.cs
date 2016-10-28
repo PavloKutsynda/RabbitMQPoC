@@ -45,11 +45,11 @@ namespace WpfRabbitMqPublisher
 
         private void Publish_Request_Message(object sender, RoutedEventArgs e)
         {
-            IModel model = connection.CreateModel();
+            IModel channel = connection.CreateModel();
 
             PublicationAddress address = new PublicationAddress(ExchangeType.Topic, RabbitMqService.ExchangeName, "request");
 
-            IBasicProperties basicProperties = model.CreateBasicProperties();
+            IBasicProperties basicProperties = channel.CreateBasicProperties();
             basicProperties.SetPersistent(false);
 
             byte[] messageBuffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new RequestMessage
@@ -58,7 +58,7 @@ namespace WpfRabbitMqPublisher
                 Text = this.RequestText.Text
             }));
 
-            model.BasicPublish(address, basicProperties, messageBuffer);
+            channel.BasicPublish(address, basicProperties, messageBuffer);
         }
 
         #endregion

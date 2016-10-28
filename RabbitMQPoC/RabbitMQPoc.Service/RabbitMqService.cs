@@ -21,6 +21,18 @@ namespace RabbitMQPoc.Service
         {
             SetUpEnv();
         }
+        
+        public IConnection GetRabbitMqConnection()
+        {
+            ConnectionFactory connectionFactory = new ConnectionFactory
+            {
+                HostName = _hostName,
+                UserName = _userName,
+                Password = _password
+            };
+
+            return connectionFactory.CreateConnection();
+        }
 
         private void SetUpEnv()
         {
@@ -37,18 +49,6 @@ namespace RabbitMQPoc.Service
                     channel.QueueBind(RabbitMqService.ResponseQueueName, RabbitMqService.ExchangeName, "response");
                 }
             }
-        }
-
-        public IConnection GetRabbitMqConnection()
-        {
-            ConnectionFactory connectionFactory = new ConnectionFactory
-            {
-                HostName = _hostName,
-                UserName = _userName,
-                Password = _password
-            };
-
-            return connectionFactory.CreateConnection();
         }
     }
 }
